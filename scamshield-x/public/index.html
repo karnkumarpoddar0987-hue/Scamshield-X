@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ScamShield X — AI Cyber Fraud Prevention</title>
+<link rel="stylesheet" href="style.css">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+</head>
+<body>
+<div id="scam-alert-popup" class="scam-popup hidden">
+  <div class="popup-inner">
+    <div class="popup-icon"><i class="fas fa-exclamation-triangle"></i></div>
+    <div class="popup-title">⚠ POSSIBLE SCAM DETECTED</div>
+    <div class="popup-msg" id="popup-msg">High fraud probability detected!</div>
+    <div class="popup-score" id="popup-score">Risk: 87%</div>
+    <button class="popup-close" onclick="closePopup()">DISMISS</button>
+  </div>
+</div>
+
+<nav class="navbar">
+  <div class="nav-brand">
+    <div class="brand-icon"><i class="fas fa-shield-halved"></i></div>
+    <span class="brand-name">ScamShield <span class="brand-x">X</span></span>
+  </div>
+  <div class="nav-links">
+    <a href="#" onclick="showPage('landing')" class="nav-link active" id="nav-landing">Home</a>
+    <a href="#" onclick="showPage('dashboard')" class="nav-link" id="nav-dashboard">Dashboard</a>
+    <a href="#" onclick="showPage('radar')" class="nav-link" id="nav-radar">Radar Map</a>
+    <a href="#" onclick="showPage('assistant')" class="nav-link" id="nav-assistant">AI Assistant</a>
+    <a href="#" onclick="showPage('simulator')" class="nav-link" id="nav-simulator">Simulator</a>
+    <a href="#" onclick="showPage('report')" class="nav-link" id="nav-report">Report</a>
+  </div>
+  <div class="nav-actions">
+    <div class="threat-badge" id="nav-threat-count"><i class="fas fa-circle-dot pulse-red"></i> <span>Loading...</span></div>
+    <button class="btn-protect" onclick="showPage('report')"><i class="fas fa-bolt"></i> One-Tap Protect</button>
+  </div>
+</nav>
+
+<div id="page-landing" class="page active">
+  <section class="hero">
+    <div class="hero-bg-grid"></div>
+    <div class="hero-particles" id="particles"></div>
+    <div class="hero-content">
+      <div class="hero-badge"><i class="fas fa-shield-halved"></i> AI-Powered Cyber Protection</div>
+      <h1 class="hero-title">Fight Fraud<br><span class="gradient-text">Before It Happens</span></h1>
+      <p class="hero-subtitle">ScamShield X uses advanced AI to detect scam calls, deepfake voices, phishing links and cyber fraud in real-time — protecting millions of Indians from digital crime.</p>
+      <div class="hero-actions">
+        <button class="btn-primary" onclick="showPage('dashboard')"><i class="fas fa-radar"></i> Launch Dashboard</button>
+        <button class="btn-secondary" onclick="showPage('simulator')"><i class="fas fa-play"></i> Try Demo</button>
+      </div>
+      <div class="hero-stats">
+        <div class="hstat"><span class="hstat-num" id="hs-protected">4.7M+</span><span class="hstat-label">Users Protected</span></div>
+        <div class="hstat-divider"></div>
+        <div class="hstat"><span class="hstat-num" id="hs-detected">2.8M+</span><span class="hstat-label">Scams Detected</span></div>
+        <div class="hstat-divider"></div>
+        <div class="hstat"><span class="hstat-num">₹847Cr+</span><span class="hstat-label">Fraud Prevented</span></div>
+        <div class="hstat-divider"></div>
+        <div class="hstat"><span class="hstat-num">99.2%</span><span class="hstat-label">Accuracy Rate</span></div>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="shield-ring ring1"></div>
+      <div class="shield-ring ring2"></div>
+      <div class="shield-ring ring3"></div>
+      <div class="shield-core"><i class="fas fa-shield-halved"></i></div>
+      <div class="orbit-dot dot1"><i class="fas fa-phone"></i></div>
+      <div class="orbit-dot dot2"><i class="fas fa-link"></i></div>
+      <div class="orbit-dot dot3"><i class="fas fa-microphone"></i></div>
+      <div class="orbit-dot dot4"><i class="fas fa-robot"></i></div>
+    </div>
+  </section>
+
+  <section class="features-section">
+    <div class="section-header">
+      <div class="section-tag">CORE MODULES</div>
+      <h2>Next-Gen Fraud Protection</h2>
+      <p>Seven AI-powered modules working together to keep you safe</p>
+    </div>
+    <div class="features-grid">
+      <div class="feature-card" onclick="showPage('dashboard')">
+        <div class="feature-icon" style="background: linear-gradient(135deg,#0066ff,#00ccff)"><i class="fas fa-phone-volume"></i></div>
+        <h3>AI Scam Call Detection</h3>
+        <p>Real-time voice analysis with fraud probability scoring and instant warnings</p>
+        <div class="feature-tag">LIVE</div>
+      </div>
+      <div class="feature-card" onclick="showPage('dashboard')">
+        <div class="feature-icon" style="background: linear-gradient(135deg,#7700ff,#cc00ff)"><i class="fas fa-microphone-slash"></i></div>
+        <h3>Deepfake Voice Detector</h3>
+        <p>AI-generated voice detection with voiceprint authenticity analysis</p>
+        <div class="feature-tag">AI</div>
+      </div>
+      <div class="feature-card" onclick="showPage('dashboard')">
+        <div class="feature-icon" style="background: linear-gradient(135deg,#ff6600,#ffcc00)"><i class="fas fa-link"></i></div>
+        <h3>Phishing Link Scanner</h3>
+        <p>Instant URL risk analysis for SMS, email and web links</p>
+        <div class="feature-tag">SCAN</div>
+      </div>
+      <div class="feature-card" onclick="showPage('radar')">
+        <div class="feature-icon" style="background: linear-gradient(135deg,#00cc44,#00ff88)"><i class="fas fa-map-location-dot"></i></div>
+        <h3>Scam Radar Heatmap</h3>
+        <p>Live fraud hotspot map with community-reported threat intelligence</p>
+        <div class="feature-tag">LIVE MAP</div>
+      </div>
+      <div class="feature-card" onclick="showPage('assistant')">
+        <div class="feature-icon" style="background: linear-gradient(135deg,#ff0066,#ff6699)"><i class="fas fa-robot"></i></div>
+        <h3>Smart Cyber Assistant</h3>
+        <p>Personal AI fraud safety guide with emergency response suggestions</p>
+        <div class="feature-tag">AI CHAT</div>
+      </div>
+      <div class="feature-card" onclick="showPage('report')">
+        <div class="feature-icon" style="background: linear-gradient(135deg,#ff3300,#ff6600)"><i class="fas fa-bolt"></i></div>
+        <h3>One-Tap Protect</h3>
+        <p>Instantly report, block and alert authorities with a single tap</p>
+        <div class="feature-tag">EMERGENCY</div>
+      </div>
+      <div class="feature-card" onclick="showPage('simulator')">
+        <div class="feature-icon" style="background: linear-gradient(135deg,#0099ff,#00ffcc)"><i class="fas fa-gamepad"></i></div>
+        <h3>Fraud Awareness Simulator</h3>
+        <p>Gamified scam training to recognize and avoid fraud attempts</p>
+        <div class="feature-tag">TRAINING</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="media-section">
+    <div class="section-header">
+      <div class="section-tag">LIVE DEMO</div>
+      <h2>See ScamShield X in Action</h2>
+      <p>Watch how AI detects fraud in real-time — with live audio alerts</p>
+    </div>
+
+    <div class="media-layout">
+      <div class="video-demo-wrap glass-card">
+        <div class="vd-header">
+          <div class="vd-title"><i class="fas fa-circle-play" style="color:#ff0040"></i> Scam Call Detection — Live Demo</div>
+          <div class="vd-live-badge"><span class="pulse-dot"></span> SIMULATED LIVE</div>
+        </div>
+        <div class="video-screen" id="video-screen">
+          <div class="vs-idle" id="vs-idle">
+            <div class="vs-idle-icon"><i class="fas fa-shield-halved"></i></div>
+            <div class="vs-idle-text">ScamShield X</div>
+            <div class="vs-idle-sub">AI Fraud Detection System</div>
+            <button class="vs-play-btn" onclick="startVideoDemo()">
+              <i class="fas fa-play"></i> Play Demo
+            </button>
+          </div>
+          <div class="vs-scene hidden" id="vs-scene">
+            <div class="vs-scene-inner">
+              <div class="vs-phone-incoming" id="vs-phone">
+                <div class="vs-phone-top">
+                  <div class="vs-phone-icon-wrap"><i class="fas fa-phone-volume"></i></div>
+                  <div class="vs-phone-info">
+                    <div class="vs-phone-num">+91 98XXXXXXXX</div>
+                    <div class="vs-phone-label">Incoming Call...</div>
+                  </div>
+                </div>
+                <div class="vs-waveform" id="vs-waveform">
+                  <div class="vsw-bar"></div><div class="vsw-bar"></div><div class="vsw-bar"></div>
+                  <div class="vsw-bar"></div><div class="vsw-bar"></div><div class="vsw-bar"></div>
+                  <div class="vsw-bar"></div><div class="vsw-bar"></div><div class="vsw-bar"></div>
+                  <div class="vsw-bar"></div><div class="vsw-bar"></div><div class="vsw-bar"></div>
+                </div>
+              </div>
+              <div class="vs-ai-scan hidden" id="vs-ai-scan">
+                <div class="vs-scan-ring"></div>
+                <div class="vs-scan-text" id="vs-scan-text">AI Analyzing...</div>
+                <div class="vs-scan-bar-wrap"><div class="vs-scan-bar" id="vs-scan-bar"></div></div>
+                <div class="vs-scan-steps" id="vs-scan-steps"></div>
+              </div>
+              <div class="vs-alert hidden" id="vs-alert">
+                <div class="vs-alert-icon"><i class="fas fa-triangle-exclamation"></i></div>
+                <div class="vs-alert-title">⚠ SCAM DETECTED</div>
+                <div class="vs-alert-score" id="vs-alert-score">91%</div>
+                <div class="vs-alert-label">Fraud Probability</div>
+                <div class="vs-alert-tags" id="vs-alert-tags"></div>
+                <div class="vs-alert-rec" id="vs-alert-rec"></div>
+                <div class="vs-alert-btns">
+                  <button class="vs-btn-block" onclick="demoBlock()"><i class="fas fa-ban"></i> Block</button>
+                  <button class="vs-btn-report" onclick="demoReport()"><i class="fas fa-flag"></i> Report</button>
+                  <a href="tel:1930" class="vs-btn-1930"><i class="fas fa-phone"></i> 1930</a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="vs-controls" id="vs-controls">
+            <button class="vs-ctrl-btn" onclick="startVideoDemo()" id="vs-replay-btn" style="display:none"><i class="fas fa-rotate-right"></i> Replay</button>
+            <button class="vs-ctrl-btn mute" id="vs-mute-btn" onclick="toggleMute()"><i class="fas fa-volume-high" id="mute-icon"></i></button>
+          </div>
+        </div>
+        <div class="vd-scenarios">
+          <div class="vds-label">Try other scenarios:</div>
+          <button class="vds-btn active" onclick="setDemoScenario(0)">Bank KYC Scam</button>
+          <button class="vds-btn" onclick="setDemoScenario(1)">Lottery Fraud</button>
+          <button class="vds-btn" onclick="setDemoScenario(2)">Deepfake Voice</button>
+          <button class="vds-btn" onclick="setDemoScenario(3)">Tech Support</button>
+        </div>
+      </div>
+
+      <div class="audio-panel glass-card">
+        <div class="ap-title"><i class="fas fa-waveform-lines" style="color:#cc00ff"></i> Audio Alert System</div>
+        <p class="ap-desc">ScamShield X plays real-time audio warnings when fraud is detected</p>
+        <div class="audio-alerts-list">
+          <div class="audio-alert-item" onclick="playAudioAlert('scam')">
+            <div class="aai-icon" style="background:linear-gradient(135deg,#ff0040,#ff3366)"><i class="fas fa-triangle-exclamation"></i></div>
+            <div class="aai-info"><div class="aai-name">Scam Alert</div><div class="aai-desc">High-risk fraud detected</div></div>
+            <button class="aai-play" id="play-scam"><i class="fas fa-play"></i></button>
+          </div>
+          <div class="audio-alert-item" onclick="playAudioAlert('warning')">
+            <div class="aai-icon" style="background:linear-gradient(135deg,#ff6600,#ffcc00)"><i class="fas fa-exclamation-circle"></i></div>
+            <div class="aai-info"><div class="aai-name">Warning Alert</div><div class="aai-desc">Suspicious activity detected</div></div>
+            <button class="aai-play" id="play-warning"><i class="fas fa-play"></i></button>
+          </div>
+          <div class="audio-alert-item" onclick="playAudioAlert('safe')">
+            <div class="aai-icon" style="background:linear-gradient(135deg,#00aa55,#00ff88)"><i class="fas fa-check-circle"></i></div>
+            <div class="aai-info"><div class="aai-name">Safe Confirmed</div><div class="aai-desc">Call verified as safe</div></div>
+            <button class="aai-play" id="play-safe"><i class="fas fa-play"></i></button>
+          </div>
+          <div class="audio-alert-item" onclick="playAudioAlert('deepfake')">
+            <div class="aai-icon" style="background:linear-gradient(135deg,#7700ff,#cc00ff)"><i class="fas fa-microphone-slash"></i></div>
+            <div class="aai-info"><div class="aai-name">Deepfake Detected</div><div class="aai-desc">AI-generated voice found</div></div>
+            <button class="aai-play" id="play-deepfake"><i class="fas fa-play"></i></button>
+          </div>
+          <div class="audio-alert-item" onclick="playAudioAlert('sos')">
+            <div class="aai-icon" style="background:linear-gradient(135deg,#cc0000,#ff0040)"><i class="fas fa-bell"></i></div>
+            <div class="aai-info"><div class="aai-name">SOS Emergency</div><div class="aai-desc">Family alert triggered</div></div>
+            <button class="aai-play" id="play-sos"><i class="fas fa-play"></i></button>
+          </div>
+        </div>
+        <div class="audio-visualizer" id="audio-visualizer">
+          <div class="av-bar"></div><div class="av-bar"></div><div class="av-bar"></div>
+          <div class="av-bar"></div><div class="av-bar"></div><div class="av-bar"></div>
+          <div class="av-bar"></div><div class="av-bar"></div><div class="av-bar"></div>
+          <div class="av-bar"></div><div class="av-bar"></div><div class="av-bar"></div>
+          <div class="av-bar"></div><div class="av-bar"></div><div class="av-bar"></div>
+          <div class="av-bar"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="gallery-section">
+      <div class="gallery-header">
+        <div class="section-tag" style="margin-bottom:0">SCAM AWARENESS</div>
+        <h3>Know Your Enemy — Common Scam Types</h3>
+        <p>Click any card to learn how ScamShield X detects and blocks it</p>
+      </div>
+      <div class="gallery-grid" id="gallery-grid"></div>
+    </div>
+
+    <div class="lightbox-overlay hidden" id="lightbox" onclick="closeLightbox()">
+      <div class="lightbox-box" onclick="event.stopPropagation()">
+        <button class="lb-close" onclick="closeLightbox()"><i class="fas fa-xmark"></i></button>
+        <div class="lb-visual" id="lb-visual"></div>
+        <div class="lb-content">
+          <div class="lb-badge" id="lb-badge"></div>
+          <h3 class="lb-title" id="lb-title"></h3>
+          <p class="lb-desc" id="lb-desc"></p>
+          <div class="lb-stats" id="lb-stats"></div>
+          <div class="lb-how">
+            <div class="lb-how-title"><i class="fas fa-shield-halved"></i> How ScamShield X Detects This</div>
+            <div class="lb-how-steps" id="lb-how-steps"></div>
+          </div>
+          <button class="btn-primary" onclick="closeLightbox();showPage('dashboard')"><i class="fas fa-radar"></i> Test It Now</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="impact-section">
+    <div class="section-header">
+      <div class="section-tag">IMPACT</div>
+      <h2>Real Numbers. Real Protection.</h2>
+    </div>
+    <div class="impact-grid">
+      <div class="impact-card">
+        <div class="impact-chart-wrap"><canvas id="impactChart1"></canvas></div>
+        <h4>Scam Types Detected</h4>
+      </div>
+      <div class="impact-card">
+        <div class="impact-chart-wrap"><canvas id="impactChart2"></canvas></div>
+        <h4>Monthly Fraud Trends</h4>
+      </div>
+      <div class="impact-stats">
+        <div class="istat"><i class="fas fa-shield-halved" style="color:#00ccff"></i><div><span class="istat-num">99.2%</span><span class="istat-label">Detection Accuracy</span></div></div>
+        <div class="istat"><i class="fas fa-clock" style="color:#00ff88"></i><div><span class="istat-num">&lt;0.3s</span><span class="istat-label">Response Time</span></div></div>
+        <div class="istat"><i class="fas fa-users" style="color:#cc00ff"></i><div><span class="istat-num">4.7M+</span><span class="istat-label">Active Users</span></div></div>
+        <div class="istat"><i class="fas fa-globe" style="color:#ffcc00"></i><div><span class="istat-num">28 States</span><span class="istat-label">Coverage</span></div></div>
+        <div class="istat"><i class="fas fa-handshake" style="color:#ff6600"></i><div><span class="istat-num">1930</span><span class="istat-label">Helpline Integrated</span></div></div>
+        <div class="istat"><i class="fas fa-award" style="color:#ff0066"></i><div><span class="istat-num">#1</span><span class="istat-label">Cyber Safety App</span></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="family-section">
+    <div class="family-bg-glow"></div>
+    <div class="family-layout">
+      <div class="family-content">
+        <div class="section-tag" style="margin-bottom:20px">FAMILY SAFETY SHIELD</div>
+        <h2 class="family-headline">
+          Maa-Baap Ko Scam Se Bachao —<br>
+          <span class="gradient-text">Apne Phone Se, Real-Time Mein</span>
+        </h2>
+        <p class="family-para">
+          Aapke parents ko agar koi fraud call aaye, toh aapko turant alert milega — chahe aap kitni bhi door ho. ScamShield X ka Family Safety Shield feature aapke ghar ko digitally secure rakhta hai, 24/7. Ek app, poore family ki protection.
+        </p>
+        <ul class="family-features">
+          <li>
+            <div class="ff-icon" style="background:linear-gradient(135deg,#ff0040,#ff3366)"><i class="fas fa-bell"></i></div>
+            <div class="ff-text">
+              <strong>Instant SOS Alerts</strong>
+              <span>Jaise hi parents ke phone par scam call detect ho, aapko 3 seconds mein push notification milti hai — location aur call details ke saath.</span>
+            </div>
+          </li>
+          <li>
+            <div class="ff-icon" style="background:linear-gradient(135deg,#7700ff,#cc00ff)"><i class="fas fa-ban"></i></div>
+            <div class="ff-text">
+              <strong>Remote Block Feature</strong>
+              <span>Apne phone se parents ke device par suspicious numbers ko remotely block karo — bina unhe kuch kiye. Ek tap, instant protection.</span>
+            </div>
+          </li>
+          <li>
+            <div class="ff-icon" style="background:linear-gradient(135deg,#0066ff,#00ccff)"><i class="fas fa-phone-volume"></i></div>
+            <div class="ff-text">
+              <strong>One-Click 1930 Helpline</strong>
+              <span>Emergency mein directly National Cyber Crime Helpline 1930 se connect karo — app ke andar se, bina number dial kiye.</span>
+            </div>
+          </li>
+        </ul>
+        <div class="family-cta-row">
+          <button class="btn-family-cta" onclick="showPage('report')">
+            <i class="fas fa-heart-pulse"></i> Abhi Apne Parents Ko Protect Karo
+          </button>
+          <div class="family-urgency"><i class="fas fa-triangle-exclamation"></i> Har 2 minute mein ek senior citizen scam ka shikaar hota hai</div>
+        </div>
+      </div>
+      <div class="family-visual">
+        <div class="fv-phone parent-phone">
+          <div class="fv-phone-screen">
+            <div class="fv-screen-header"><i class="fas fa-phone-volume" style="color:#ff0040"></i> Incoming Call</div>
+            <div class="fv-caller">+91 98XXXXXXXX</div>
+            <div class="fv-scam-badge"><i class="fas fa-triangle-exclamation"></i> SCAM DETECTED — 91%</div>
+            <div class="fv-screen-actions">
+              <div class="fv-btn decline"><i class="fas fa-phone-slash"></i></div>
+              <div class="fv-btn accept"><i class="fas fa-phone"></i></div>
+            </div>
+          </div>
+          <div class="fv-label">Parent's Phone</div>
+        </div>
+        <div class="fv-arrow-wrap">
+          <div class="fv-arrow-line"></div>
+          <div class="fv-arrow-pulse"></div>
+          <div class="fv-arrow-label">Instant Alert</div>
+        </div>
+        <div class="fv-phone child-phone">
+          <div class="fv-phone-screen alert-screen">
+            <div class="fv-screen-header" style="color:#ff0040"><i class="fas fa-bell"></i> SOS ALERT</div>
+            <div class="fv-alert-msg">Papa ko scam call aa rahi hai!</div>
+            <div class="fv-alert-sub">Location: Home · 2 sec ago</div>
+            <div class="fv-alert-actions">
+              <div class="fv-abtn block"><i class="fas fa-ban"></i> Block</div>
+              <div class="fv-abtn call1930"><i class="fas fa-phone"></i> 1930</div>
+            </div>
+          </div>
+          <div class="fv-label">Your Phone</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="testimonials-section">
+    <div class="section-header">
+      <div class="section-tag">REAL STORIES</div>
+      <h2>Unki Zindagi Badli, Aapki Bhi Badlegi</h2>
+      <p>Real users, real scams stopped — in their own words</p>
+    </div>
+    <div class="testimonials-grid" id="testimonials-grid">
+      <div class="testi-card loading-testi">
+        <div class="testi-shimmer"></div>
+      </div>
+      <div class="testi-card loading-testi">
+        <div class="testi-shimmer"></div>
+      </div>
+      <div class="testi-card loading-testi">
+        <div class="testi-shimmer"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="comparison-section">
+    <div class="section-header">
+      <div class="section-tag">WHY SCAMSHIELD X</div>
+      <h2>Aap Kyun Best Ho — Comparison</h2>
+      <p>See exactly what sets ScamShield X apart from every other app</p>
+    </div>
+    <div class="comparison-wrap">
+      <div class="comparison-table-container glass-card">
+        <table class="comparison-table" id="comparison-table">
+          <thead>
+            <tr>
+              <th class="ct-feature">Feature</th>
+              <th class="ct-others"><i class="fas fa-mobile-screen"></i> Other Caller ID Apps</th>
+              <th class="ct-ours"><i class="fas fa-shield-halved"></i> ScamShield X</th>
+            </tr>
+          </thead>
+          <tbody id="comparison-tbody">
+            <tr><td colspan="3" style="text-align:center;color:#7aa0c0;padding:30px">Loading comparison data...</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="comparison-verdict glass-card">
+        <div class="cv-icon"><i class="fas fa-trophy"></i></div>
+        <div class="cv-title">The Clear Winner</div>
+        <div class="cv-text">ScamShield X is the only platform combining AI deepfake detection, family protection, real-time phishing scanning, and direct government helpline integration — all in one app.</div>
+        <button class="btn-primary" onclick="showPage('dashboard')"><i class="fas fa-rocket"></i> Try It Now — Free</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="tts-section">
+    <div class="section-header">
+      <div class="section-tag">AI VOICE READER</div>
+      <h2>ScamShield <span class="gradient-text">Voice AI</span></h2>
+      <p>Type any scam message or paragraph — AI will read it aloud instantly</p>
+    </div>
+    <div class="tts-layout">
+      <div class="tts-main glass-card">
+        <div class="tts-top-bar">
+          <div class="tts-indicator" id="tts-indicator">
+            <div class="tts-ind-dot" id="tts-ind-dot"></div>
+            <span id="tts-status-text">Ready</span>
+          </div>
+          <div class="tts-char-count"><span id="tts-char-count">0</span> / 1000</div>
+        </div>
+        <div class="tts-textarea-wrap">
+          <textarea
+            id="tts-input"
+            class="tts-textarea"
+            maxlength="1000"
+            placeholder="Yahan kuch bhi type karo ya paste karo — scam message, warning, koi bhi paragraph...&#10;&#10;Example: 'Aapka bank account suspend ho gaya hai. Abhi OTP share karo warna account permanently block ho jaayega.'"
+            oninput="ttsCharCount()"
+          ></textarea>
+          <div class="tts-word-highlight" id="tts-word-highlight"></div>
+        </div>
+        <div class="tts-quick-texts">
+          <div class="tts-qt-label">Quick Load:</div>
+          <button class="tts-qt-btn" onclick="ttsLoadQuick(0)"><i class="fas fa-phone"></i> Bank Scam</button>
+          <button class="tts-qt-btn" onclick="ttsLoadQuick(1)"><i class="fas fa-trophy"></i> Lottery Scam</button>
+          <button class="tts-qt-btn" onclick="ttsLoadQuick(2)"><i class="fas fa-briefcase"></i> Job Fraud</button>
+          <button class="tts-qt-btn" onclick="ttsLoadQuick(3)"><i class="fas fa-shield-halved"></i> Safety Alert</button>
+          <button class="tts-qt-btn" onclick="ttsLoadQuick(4)"><i class="fas fa-heart"></i> Family Warning</button>
+        </div>
+        <div class="tts-controls">
+          <button class="tts-btn-play" id="tts-btn-play" onclick="ttsPlay()">
+            <i class="fas fa-play" id="tts-play-icon"></i>
+            <span id="tts-btn-label">Speak Now</span>
+          </button>
+          <button class="tts-btn-pause" id="tts-btn-pause" onclick="ttsPause()" disabled>
+            <i class="fas fa-pause"></i>
+          </button>
+          <button class="tts-btn-stop" id="tts-btn-stop" onclick="ttsStop()" disabled>
+            <i class="fas fa-stop"></i>
+          </button>
+          <button class="tts-btn-clear" onclick="ttsClear()">
+            <i class="fas fa-trash"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="tts-settings glass-card">
+        <div class="tts-settings-title"><i class="fas fa-sliders" style="color:#00ccff"></i> Voice Settings</div>
+
+        <div class="tts-setting-group">
+          <label class="tts-label">Voice / Language</label>
+          <select id="tts-voice-select" class="cyber-input tts-select" onchange="ttsPreview()">
+            <option value="">Loading voices...</option>
+          </select>
+        </div>
+
+        <div class="tts-setting-group">
+          <label class="tts-label">Speed <span class="tts-val" id="rate-val">1.0x</span></label>
+          <input type="range" id="tts-rate" min="0.5" max="2" step="0.1" value="1" class="tts-range" oninput="document.getElementById('rate-val').textContent=this.value+'x'">
+          <div class="tts-range-labels"><span>Slow</span><span>Normal</span><span>Fast</span></div>
+        </div>
+
+        <div class="tts-setting-group">
+          <label class="tts-label">Pitch <span class="tts-val" id="pitch-val">1.0</span></label>
+          <input type="range" id="tts-pitch" min="0.5" max="2" step="0.1" value="1" class="tts-range" oninput="document.getElementById('pitch-val').textContent=this.value">
+          <div class="tts-range-labels"><span>Low</span><span>Normal</span><span>High</span></div>
+        </div>
+
+        <div class="tts-setting-group">
+          <label class="tts-label">Volume <span class="tts-val" id="vol-val">100%</span></label>
+          <input type="range" id="tts-volume" min="0" max="1" step="0.05" value="1" class="tts-range" oninput="document.getElementById('vol-val').textContent=Math.round(this.value*100)+'%'">
+          <div class="tts-range-labels"><span>Mute</span><span>Mid</span><span>Max</span></div>
+        </div>
+
+        <button class="tts-preview-btn" onclick="ttsPreview()"><i class="fas fa-headphones"></i> Preview Voice</button>
+
+        <div class="tts-visualizer-wrap">
+          <div class="tts-viz-label">Live Audio Wave</div>
+          <div class="tts-visualizer" id="tts-visualizer">
+            <div class="tts-vbar"></div><div class="tts-vbar"></div><div class="tts-vbar"></div>
+            <div class="tts-vbar"></div><div class="tts-vbar"></div><div class="tts-vbar"></div>
+            <div class="tts-vbar"></div><div class="tts-vbar"></div><div class="tts-vbar"></div>
+            <div class="tts-vbar"></div><div class="tts-vbar"></div><div class="tts-vbar"></div>
+            <div class="tts-vbar"></div><div class="tts-vbar"></div><div class="tts-vbar"></div>
+            <div class="tts-vbar"></div><div class="tts-vbar"></div><div class="tts-vbar"></div>
+            <div class="tts-vbar"></div><div class="tts-vbar"></div>
+          </div>
+        </div>
+
+        <div class="tts-progress-wrap">
+          <div class="tts-progress-bar" id="tts-progress-bar"></div>
+        </div>
+        <div class="tts-progress-label" id="tts-progress-label">0%</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta-section">
+    <div class="cta-content">
+      <h2>Your Digital Safety Starts Now</h2>
+      <p>Join 4.7 million Indians already protected by ScamShield X</p>
+      <div class="cta-actions">
+        <button class="btn-primary large" onclick="showPage('dashboard')"><i class="fas fa-shield-halved"></i> Start Protection</button>
+        <a href="tel:1930" class="btn-helpline"><i class="fas fa-phone"></i> Cyber Helpline 1930</a>
+      </div>
+    </div>
+  </section>
+</div>
+
+<div id="page-dashboard" class="page">
+  <div class="page-header">
+    <div>
+      <h2 class="page-title"><i class="fas fa-gauge-high"></i> Live Detection Dashboard</h2>
+      <p class="page-sub">Real-time AI fraud analysis — all modules active</p>
+    </div>
+    <div class="live-indicator"><span class="pulse-dot"></span> LIVE MONITORING</div>
+  </div>
+
+  <div class="dash-stats-row">
+    <div class="dash-stat-card">
+      <div class="dsc-icon" style="color:#00ccff"><i class="fas fa-phone-volume"></i></div>
+      <div class="dsc-info"><span class="dsc-num" id="ds-calls">0</span><span class="dsc-label">Calls Analyzed Today</span></div>
+    </div>
+    <div class="dash-stat-card">
+      <div class="dsc-icon" style="color:#ff0040"><i class="fas fa-triangle-exclamation"></i></div>
+      <div class="dsc-info"><span class="dsc-num" id="ds-threats">0</span><span class="dsc-label">Active Threats</span></div>
+    </div>
+    <div class="dash-stat-card">
+      <div class="dsc-icon" style="color:#00ff88"><i class="fas fa-link"></i></div>
+      <div class="dsc-info"><span class="dsc-num" id="ds-links">0</span><span class="dsc-label">Links Scanned</span></div>
+    </div>
+    <div class="dash-stat-card">
+      <div class="dsc-icon" style="color:#cc00ff"><i class="fas fa-users-shield"></i></div>
+      <div class="dsc-info"><span class="dsc-num" id="ds-users">0</span><span class="dsc-label">Users Protected</span></div>
+    </div>
+  </div>
+
+  <div class="dash-grid">
+    <div class="dash-panel glass-card">
+      <div class="panel-header"><i class="fas fa-phone-volume" style="color:#00ccff"></i> AI Scam Call Analyzer</div>
+      <div class="input-group">
+        <input type="text" id="call-phone" placeholder="Caller phone number (optional)" class="cyber-input">
+      </div>
+      <div class="input-group">
+        <textarea id="call-transcript" placeholder="Paste call transcript or describe what the caller said..." class="cyber-textarea" rows="4"></textarea>
+      </div>
+      <button id="btn-analyze-call" class="btn-analyze" onclick="analyzeCall()"><i class="fas fa-brain"></i> Analyze Call</button>
+      <div id="call-result" class="result-box hidden"></div>
+    </div>
+
+    <div class="dash-panel glass-card">
+      <div class="panel-header"><i class="fas fa-microphone-slash" style="color:#cc00ff"></i> Deepfake Voice Detector</div>
+      <div class="deepfake-visual">
+        <div class="waveform" id="waveform">
+          <div class="wave-bar" style="height:20px"></div><div class="wave-bar" style="height:35px"></div><div class="wave-bar" style="height:50px"></div><div class="wave-bar" style="height:30px"></div><div class="wave-bar" style="height:60px"></div><div class="wave-bar" style="height:25px"></div><div class="wave-bar" style="height:45px"></div><div class="wave-bar" style="height:55px"></div><div class="wave-bar" style="height:20px"></div><div class="wave-bar" style="height:40px"></div><div class="wave-bar" style="height:65px"></div><div class="wave-bar" style="height:30px"></div>
+        </div>
+      </div>
+      <div class="input-group">
+        <textarea id="voice-text" placeholder="Paste voice-to-text transcript for deepfake analysis..." class="cyber-textarea" rows="3"></textarea>
+      </div>
+      <button id="btn-analyze-deepfake" class="btn-analyze purple" onclick="analyzeDeepfake()"><i class="fas fa-waveform-lines"></i> Analyze Voice</button>
+      <div id="deepfake-result" class="result-box hidden"></div>
+    </div>
+
+    <div class="dash-panel glass-card">
+      <div class="panel-header"><i class="fas fa-link" style="color:#ffcc00"></i> Phishing Link Scanner</div>
+      <div class="input-group">
+        <input type="text" id="scan-url" placeholder="Paste suspicious URL here..." class="cyber-input">
+      </div>
+      <button id="btn-scan-link" class="btn-analyze orange" onclick="scanLink()"><i class="fas fa-magnifying-glass"></i> Scan Link</button>
+      <div id="link-result" class="result-box hidden"></div>
+      <div class="panel-header mt-20"><i class="fas fa-sms" style="color:#00ff88"></i> SMS / Email Text Scanner</div>
+      <div class="input-group">
+        <textarea id="scan-text" placeholder="Paste suspicious SMS or email content..." class="cyber-textarea" rows="3"></textarea>
+      </div>
+      <button id="btn-scan-text" class="btn-analyze green" onclick="scanText()"><i class="fas fa-shield-halved"></i> Scan Message</button>
+      <div id="text-result" class="result-box hidden"></div>
+    </div>
+
+    <div class="dash-panel glass-card">
+      <div class="panel-header"><i class="fas fa-id-card" style="color:#ff6600"></i> Digital Trust Score</div>
+      <p class="panel-desc">Check the trust score of any unknown caller</p>
+      <div class="input-group">
+        <input type="text" id="trust-phone" placeholder="Enter phone number..." class="cyber-input">
+      </div>
+      <button id="btn-check-trust" class="btn-analyze orange" onclick="checkTrust()"><i class="fas fa-search"></i> Check Trust Score</button>
+      <div id="trust-result" class="result-box hidden"></div>
+    </div>
+  </div>
+
+  <div class="dash-panel glass-card full-width mt-20">
+    <div class="panel-header"><i class="fas fa-chart-line" style="color:#00ccff"></i> Scam Pattern Analytics</div>
+    <div class="analytics-grid">
+      <div class="chart-wrap"><canvas id="scamTrendChart"></canvas></div>
+      <div class="chart-wrap"><canvas id="scamTypeChart"></canvas></div>
+      <div class="threat-feed">
+        <div class="feed-title">Live Threat Feed</div>
+        <div id="threat-feed-list"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="page-radar" class="page">
+  <div class="page-header">
+    <div>
+      <h2 class="page-title"><i class="fas fa-map-location-dot"></i> Scam Radar Heatmap</h2>
+      <p class="page-sub">Live fraud hotspots across India — community powered intelligence</p>
+    </div>
+    <div class="live-indicator"><span class="pulse-dot"></span> LIVE DATA</div>
+  </div>
+  <div class="radar-layout">
+    <div class="radar-map-wrap glass-card">
+      <div id="scam-map" style="height:500px;border-radius:12px;"></div>
+    </div>
+    <div class="radar-sidebar">
+      <div class="glass-card radar-summary">
+        <div class="rs-title">Threat Summary</div>
+        <div class="rs-total" id="radar-total">Loading...</div>
+        <div class="rs-label">Total Reports Today</div>
+      </div>
+      <div class="glass-card">
+        <div class="rs-title">Top Hotspots</div>
+        <div id="hotspot-list"></div>
+      </div>
+      <div class="glass-card">
+        <div class="rs-title">Scam Type Breakdown</div>
+        <canvas id="radarTypeChart" height="200"></canvas>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="page-assistant" class="page">
+  <div class="page-header">
+    <div>
+      <h2 class="page-title"><i class="fas fa-robot"></i> Smart Cyber Assistant</h2>
+      <p class="page-sub">Your personal AI fraud safety guide — available 24/7</p>
+    </div>
+  </div>
+  <div class="assistant-layout">
+    <div class="chat-container glass-card">
+      <div class="chat-header">
+        <div class="chat-avatar"><i class="fas fa-robot"></i></div>
+        <div class="chat-info">
+          <div class="chat-name">ScamShield AI</div>
+          <div class="chat-status"><span class="pulse-dot green"></span> Online — Ready to help</div>
+        </div>
+        <div class="chat-badge">AI POWERED</div>
+      </div>
+      <div class="chat-messages" id="chat-messages">
+        <div class="chat-msg bot">
+          <div class="msg-avatar"><i class="fas fa-robot"></i></div>
+          <div class="msg-bubble">
+            <p>Hello! I'm ScamShield AI, your personal cyber fraud safety assistant.</p>
+            <p>I can help you identify scams, analyze suspicious calls or messages, and guide you through emergency situations. What can I help you with today?</p>
+            <div class="quick-actions">
+              <button onclick="sendQuickMsg('Someone asked for my OTP')">OTP Request</button>
+              <button onclick="sendQuickMsg('I received a suspicious call')">Suspicious Call</button>
+              <button onclick="sendQuickMsg('I got a suspicious link')">Suspicious Link</button>
+              <button onclick="sendQuickMsg('I need emergency help with a scam')">Emergency Help</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="chat-input-area">
+        <input type="text" id="chat-input" placeholder="Describe your situation or ask about a scam..." class="chat-input" onkeypress="if(event.key==='Enter')sendChat()">
+        <button class="chat-send" onclick="sendChat()"><i class="fas fa-paper-plane"></i></button>
+      </div>
+    </div>
+    <div class="assistant-sidebar">
+      <div class="glass-card">
+        <div class="rs-title"><i class="fas fa-phone" style="color:#ff0040"></i> Emergency Contacts</div>
+        <div class="emergency-list">
+          <a href="tel:1930" class="emergency-item"><div class="ei-num">1930</div><div class="ei-label">Cyber Crime Helpline</div></a>
+          <a href="tel:100" class="emergency-item"><div class="ei-num">100</div><div class="ei-label">Police</div></a>
+          <a href="tel:1091" class="emergency-item"><div class="ei-num">1091</div><div class="ei-label">Women Helpline</div></a>
+          <a href="https://cybercrime.gov.in" target="_blank" class="emergency-item"><div class="ei-num"><i class="fas fa-globe"></i></div><div class="ei-label">cybercrime.gov.in</div></a>
+        </div>
+      </div>
+      <div class="glass-card">
+        <div class="rs-title"><i class="fas fa-lightbulb" style="color:#ffcc00"></i> Safety Tips</div>
+        <div class="tips-list" id="safety-tips"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="page-simulator" class="page">
+  <div class="page-header">
+    <div>
+      <h2 class="page-title"><i class="fas fa-gamepad"></i> Fraud Awareness Simulator</h2>
+      <p class="page-sub">Train yourself to recognize and avoid scams — gamified learning</p>
+    </div>
+    <div class="sim-score-badge">Score: <span id="sim-total-score">0</span> pts</div>
+  </div>
+  <div id="sim-home">
+    <div class="sim-intro glass-card">
+      <div class="sim-intro-icon"><i class="fas fa-graduation-cap"></i></div>
+      <h3>Scam Recognition Training</h3>
+      <p>Practice identifying real scam scenarios. Learn the red flags before fraudsters target you.</p>
+      <div class="sim-badges">
+        <div class="sim-badge beginner">Beginner</div>
+        <div class="sim-badge intermediate">Intermediate</div>
+        <div class="sim-badge advanced">Advanced</div>
+        <div class="sim-badge expert">Expert</div>
+      </div>
+    </div>
+    <div class="scenarios-grid" id="scenarios-grid"></div>
+  </div>
+  <div id="sim-active" class="hidden">
+    <div class="sim-game glass-card">
+      <div class="sim-game-header">
+        <div class="sim-scenario-title" id="sim-title"></div>
+        <div class="sim-difficulty" id="sim-diff"></div>
+        <div class="sim-points" id="sim-pts"></div>
+      </div>
+      <div class="sim-call-visual">
+        <div class="sim-phone-ring">
+          <div class="sim-phone-icon"><i class="fas fa-phone-volume"></i></div>
+          <div class="sim-ring r1"></div>
+          <div class="sim-ring r2"></div>
+          <div class="sim-ring r3"></div>
+        </div>
+        <div class="sim-caller-info">
+          <div class="sim-caller-num">+91 98XXXXXXXX</div>
+          <div class="sim-caller-label">Unknown Caller</div>
+        </div>
+      </div>
+      <div class="sim-script glass-card" id="sim-script"></div>
+      <div class="sim-question">Is this a scam?</div>
+      <div class="sim-choices">
+        <button class="sim-btn scam" onclick="simAnswer(true)"><i class="fas fa-skull-crossbones"></i> YES — This is a SCAM</button>
+        <button class="sim-btn safe" onclick="simAnswer(false)"><i class="fas fa-check-circle"></i> NO — This seems safe</button>
+      </div>
+      <div id="sim-feedback" class="sim-feedback hidden"></div>
+      <button id="sim-next-btn" class="btn-primary hidden mt-20" onclick="nextScenario()">Next Scenario <i class="fas fa-arrow-right"></i></button>
+    </div>
+  </div>
+</div>
+
+<div id="page-report" class="page">
+  <div class="page-header">
+    <div>
+      <h2 class="page-title"><i class="fas fa-flag"></i> Reporting Portal</h2>
+      <p class="page-sub">Report fraud instantly — One-Tap Protect integrated with Cyber Helpline 1930</p>
+    </div>
+  </div>
+  <div class="report-layout">
+    <div class="report-form-wrap glass-card">
+      <div class="one-tap-banner">
+        <div class="otb-icon"><i class="fas fa-bolt"></i></div>
+        <div class="otb-text">
+          <div class="otb-title">One-Tap Protect</div>
+          <div class="otb-sub">Report + Block + Alert Authorities instantly</div>
+        </div>
+        <a href="tel:1930" class="otb-call"><i class="fas fa-phone"></i> Call 1930</a>
+      </div>
+      <form id="report-form" onsubmit="submitReport(event)">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Fraud Type *</label>
+            <select id="r-type" class="cyber-input" required>
+              <option value="">Select fraud type</option>
+              <option value="Phone Scam">Phone Scam</option>
+              <option value="Phishing">Phishing / Fake Link</option>
+              <option value="UPI Fraud">UPI / Payment Fraud</option>
+              <option value="KYC Fraud">KYC / Bank Fraud</option>
+              <option value="Investment Fraud">Investment Fraud</option>
+              <option value="Job Fraud">Job / Work-from-Home Fraud</option>
+              <option value="Deepfake Call">Deepfake / AI Voice Fraud</option>
+              <option value="Romance Scam">Romance Scam</option>
+              <option value="Lottery Scam">Lottery / Prize Scam</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Your Location</label>
+            <input type="text" id="r-location" placeholder="City / State" class="cyber-input">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Scammer Phone Number</label>
+            <input type="text" id="r-phone" placeholder="+91 XXXXXXXXXX" class="cyber-input">
+          </div>
+          <div class="form-group">
+            <label>Suspicious URL (if any)</label>
+            <input type="text" id="r-url" placeholder="https://..." class="cyber-input">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Describe the Incident *</label>
+          <textarea id="r-desc" placeholder="Describe what happened in detail..." class="cyber-textarea" rows="5" required></textarea>
+        </div>
+        <div class="form-actions">
+          <button type="submit" class="btn-primary large"><i class="fas fa-paper-plane"></i> Submit Report</button>
+          <a href="https://cybercrime.gov.in" target="_blank" class="btn-secondary"><i class="fas fa-external-link"></i> File on cybercrime.gov.in</a>
+        </div>
+      </form>
+      <div id="report-success" class="report-success hidden"></div>
+    </div>
+    <div class="report-sidebar">
+      <div class="glass-card">
+        <div class="rs-title"><i class="fas fa-list-check" style="color:#00ccff"></i> Recent Reports</div>
+        <div id="recent-reports-list"><div class="loading-text">No reports yet</div></div>
+      </div>
+      <div class="glass-card">
+        <div class="rs-title"><i class="fas fa-info-circle" style="color:#ffcc00"></i> What Happens Next?</div>
+        <div class="next-steps">
+          <div class="ns-step"><div class="ns-num">1</div><div class="ns-text">Report logged in national database</div></div>
+          <div class="ns-step"><div class="ns-num">2</div><div class="ns-text">Cyber cell notified automatically</div></div>
+          <div class="ns-step"><div class="ns-num">3</div><div class="ns-text">Number/link flagged for all users</div></div>
+          <div class="ns-step"><div class="ns-num">4</div><div class="ns-text">Community threat intelligence updated</div></div>
+          <div class="ns-step"><div class="ns-num">5</div><div class="ns-text">Case reference number issued</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="footer-content">
+    <div class="footer-brand">
+      <div class="brand-icon"><i class="fas fa-shield-halved"></i></div>
+      <span class="brand-name">ScamShield <span class="brand-x">X</span></span>
+    </div>
+    <div class="footer-text">Fighting digital fraud with AI — protecting India's digital future</div>
+    <div class="footer-links">
+      <a href="tel:1930">Cyber Helpline: 1930</a>
+      <a href="https://cybercrime.gov.in" target="_blank">cybercrime.gov.in</a>
+    </div>
+  </div>
+</footer>
+
+<script src="app.js"></script>
+</body>
+</html>
