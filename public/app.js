@@ -1,4 +1,6 @@
-const API = 'http://localhost:3000/api';
+const API = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+  ? 'http://localhost:3000/api'
+  : '/api';
 
 
 let currentPage = 'landing';
@@ -14,16 +16,34 @@ let radarTypeChart = null;
 function showPage(page) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+  document.querySelectorAll('.nav-mobile-link').forEach(l => l.classList.remove('active'));
   document.getElementById('page-' + page).classList.add('active');
   const navEl = document.getElementById('nav-' + page);
   if (navEl) navEl.classList.add('active');
+  const mnavEl = document.getElementById('mnav-' + page);
+  if (mnavEl) mnavEl.classList.add('active');
   currentPage = page;
   window.scrollTo(0, 0);
+  closeMobileMenu();
   if (page === 'radar' && !mapInitialized) initMap();
   if (page === 'dashboard') initDashboardCharts();
   if (page === 'simulator') loadScenarios();
   if (page === 'report') loadRecentReports();
   if (page === 'assistant') initSafetyTips();
+}
+
+function toggleMobileMenu() {
+  const menu = document.getElementById('nav-mobile-menu');
+  const btn = document.getElementById('nav-hamburger');
+  if (menu) menu.classList.toggle('open');
+  if (btn) btn.classList.toggle('open');
+}
+
+function closeMobileMenu() {
+  const menu = document.getElementById('nav-mobile-menu');
+  const btn = document.getElementById('nav-hamburger');
+  if (menu) menu.classList.remove('open');
+  if (btn) btn.classList.remove('open');
 }
 
 function closePopup() {

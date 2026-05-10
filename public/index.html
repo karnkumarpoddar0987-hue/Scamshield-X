@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>ScamShield X — AI Cyber Fraud Prevention</title>
 <link rel="stylesheet" href="style.css">
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -38,8 +38,21 @@
   <div class="nav-actions">
     <div class="threat-badge" id="nav-threat-count"><i class="fas fa-circle-dot pulse-red"></i> <span>Loading...</span></div>
     <button class="btn-protect" onclick="showPage('report')"><i class="fas fa-bolt"></i> One-Tap Protect</button>
+    <button class="nav-hamburger" id="nav-hamburger" onclick="toggleMobileMenu()" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
   </div>
 </nav>
+
+<div class="nav-mobile-menu" id="nav-mobile-menu">
+  <a href="#" onclick="showPage('landing');closeMobileMenu()" class="nav-mobile-link" id="mnav-landing"><i class="fas fa-home"></i> Home</a>
+  <a href="#" onclick="showPage('dashboard');closeMobileMenu()" class="nav-mobile-link" id="mnav-dashboard"><i class="fas fa-gauge-high"></i> Dashboard</a>
+  <a href="#" onclick="showPage('radar');closeMobileMenu()" class="nav-mobile-link" id="mnav-radar"><i class="fas fa-map-location-dot"></i> Radar Map</a>
+  <a href="#" onclick="showPage('assistant');closeMobileMenu()" class="nav-mobile-link" id="mnav-assistant"><i class="fas fa-robot"></i> AI Assistant</a>
+  <a href="#" onclick="showPage('simulator');closeMobileMenu()" class="nav-mobile-link" id="mnav-simulator"><i class="fas fa-gamepad"></i> Simulator</a>
+  <a href="#" onclick="showPage('report');closeMobileMenu()" class="nav-mobile-link" id="mnav-report"><i class="fas fa-flag"></i> Report</a>
+  <a href="tel:1930" class="nav-mobile-link" style="color:var(--red)"><i class="fas fa-phone"></i> Helpline 1930</a>
+</div>
 
 <div id="page-landing" class="page active">
   <section class="hero">
